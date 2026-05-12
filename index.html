@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M Dobith Syadad Riyadi — Software Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: rgba(255,255,255,0.07);
+    --accent: #6ee7b7;
+    --accent2: #818cf8;
+    --accent3: #f472b6;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --card: rgba(255,255,255,0.03);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* --- NOISE TEXTURE --- */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* --- GRID BG --- */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(110,231,183,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(110,231,183,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* --- GLOWS --- */
+  .glow-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.18;
+  }
+  .glow-1 { width: 600px; height: 600px; background: var(--accent2); top: -150px; right: -150px; }
+  .glow-2 { width: 400px; height: 400px; background: var(--accent); bottom: 100px; left: -100px; }
+  .glow-3 { width: 300px; height: 300px; background: var(--accent3); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+
+  /* --- LAYOUT --- */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+  /* --- NAV --- */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 0;
+    background: rgba(10,10,15,0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* --- HERO --- */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 0 4rem;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 5rem;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(110,231,183,0.08);
+    border: 1px solid rgba(110,231,183,0.2);
+    color: var(--accent);
+    padding: 0.35rem 1rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .hero-eyebrow .dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    color: #fff;
+  }
+  h1 .highlight {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-desc {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 520px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    line-height: 1.8;
+  }
+  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.8rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a0f;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(110,231,183,0.3); }
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Profile card */
+  .profile-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .profile-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at 50% 0%, rgba(110,231,183,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .profile-avatar {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    margin: 0 auto 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid rgba(110,231,183,0.3);
+    box-shadow: 0 0 0 6px rgba(110,231,183,0.06);
+  }
+  .profile-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 0.3rem;
+  }
+  .profile-role {
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 0.5rem;
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    display: block;
+    margin-top: 0.2rem;
+  }
+  .profile-contacts { display: flex; flex-direction: column; gap: 0.5rem; }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    padding: 0.5rem 0.75rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .contact-item:hover { color: var(--accent); border-color: rgba(110,231,183,0.2); }
+  .contact-icon { font-size: 0.9rem; }
+
+  /* --- SECTIONS --- */
+  section { padding: 6rem 0; }
+  .section-header { margin-bottom: 3.5rem; }
+  .section-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    letter-spacing: -0.02em;
+    color: #fff;
+    line-height: 1.15;
+  }
+  h2 span { color: var(--accent); }
+
+  /* --- SKILLS --- */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .skill-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .skill-group:hover {
+    transform: translateY(-4px);
+    border-color: rgba(110,231,183,0.2);
+  }
+  .skill-group::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .skill-group:hover::after { opacity: 1; }
+  .skill-group-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .skill-group-icon { font-size: 1rem; }
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .badge {
+    padding: 0.35rem 0.85rem;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border: 1px solid;
+    transition: all 0.2s;
+  }
+  .badge:hover { transform: scale(1.05); }
+  .badge-green { background: rgba(110,231,183,0.08); border-color: rgba(110,231,183,0.25); color: var(--accent); }
+  .badge-indigo { background: rgba(129,140,248,0.08); border-color: rgba(129,140,248,0.25); color: var(--accent2); }
+  .badge-pink { background: rgba(244,114,182,0.08); border-color: rgba(244,114,182,0.25); color: var(--accent3); }
+  .badge-amber { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.25); color: #fbbf24; }
+
+  /* --- TIMELINE --- */
+  .timeline { position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent);
+    opacity: 0.3;
+  }
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.5s ease;
+  }
+  .timeline-dot {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s;
+  }
+  .timeline-item:hover .timeline-dot {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(110,231,183,0.2);
+  }
+  .timeline-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+    transition: border-color 0.3s;
+  }
+  .timeline-item:hover .timeline-card { border-color: rgba(110,231,183,0.15); }
+  .timeline-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
+  .timeline-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+  }
+  .timeline-period {
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 600;
+    background: rgba(110,231,183,0.08);
+    border: 1px solid rgba(110,231,183,0.15);
+    padding: 0.2rem 0.75rem;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+  .timeline-company {
+    font-size: 0.85rem;
+    color: var(--accent2);
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+  .timeline-type {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .timeline-desc {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+  .timeline-desc ul { padding-left: 1.25rem; }
+  .timeline-desc li { margin-bottom: 0.35rem; }
+  .tools-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+  .tool-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.72rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-family: 'DM Sans', monospace;
+    font-weight: 500;
+  }
+
+  /* --- CERTS --- */
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .cert-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.25s;
+  }
+  .cert-card:hover {
+    border-color: rgba(129,140,248,0.3);
+    transform: translateY(-2px);
+  }
+  .cert-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(129,140,248,0.1);
+    border: 1px solid rgba(129,140,248,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .cert-name { font-weight: 600; font-size: 0.85rem; color: #fff; line-height: 1.3; }
+  .cert-issuer { font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem; }
+  .cert-year {
+    margin-left: auto;
+    font-size: 0.72rem;
+    color: var(--accent2);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* --- ACHIEVEMENTS --- */
+  .achievement-card {
+    background: linear-gradient(135deg, rgba(110,231,183,0.05), rgba(129,140,248,0.05));
+    border: 1px solid rgba(110,231,183,0.15);
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+  .achievement-icon {
+    font-size: 3rem;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+  }
+  .achievement-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 0.35rem;
+  }
+  .achievement-org { color: var(--accent); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem; }
+  .achievement-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.7; }
+
+  /* --- FOOTER --- */
+  footer {
+    padding: 3rem 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* --- DIVIDER --- */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .profile-card { max-width: 380px; margin: 0 auto; }
+    .nav-links { display: none; }
+    .timeline::before { left: 16px; }
+    .timeline-item { grid-template-columns: 44px 1fr; }
+    .achievement-card { flex-direction: column; gap: 1rem; }
+  }
+
+  /* scroll reveal */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="glow-orb glow-1"></div>
+<div class="glow-orb glow-2"></div>
+<div class="glow-orb glow-3"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="inner">
+    <div class="nav-logo">MDS//</div>
+    <ul class="nav-links">
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#freelance">Projects</a></li>
+      <li><a href="#certifications">Certs</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <span class="dot"></span>
+          Available for opportunities
+        </div>
+        <h1>M Dobith<br><span class="highlight">Syadad Riyadi</span></h1>
+        <p class="hero-desc">
+          A dedicated Software Engineer with 4+ years of expertise in backend development. Proficient in designing, building, and maintaining scalable and efficient systems using a diverse tech stack.
+        </p>
+        <div class="hero-cta">
+          <a href="mailto:mdobithsr@gmail.com" class="btn btn-primary">✉ Hubungi Saya</a>
+          <a href="#experience" class="btn btn-outline">Lihat Pengalaman →</a>
+        </div>
+      </div>
+
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <div class="profile-avatar">MDS</div>
+        <div class="profile-name">M Dobith Syadad Riyadi</div>
+        <div class="profile-role">Software Engineer</div>
+        <div class="profile-stats">
+          <div class="stat">
+            <span class="stat-num">4+</span>
+            <span class="stat-label">Years Exp</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">10+</span>
+            <span class="stat-label">Projects</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">15+</span>
+            <span class="stat-label">Tech Stack</span>
+          </div>
+        </div>
+        <div class="profile-contacts">
+          <a href="tel:+62896216711126" class="contact-item">
+            <span class="contact-icon">📱</span> +62-896-2167-1126
+          </a>
+          <a href="mailto:mdobithsr@gmail.com" class="contact-item">
+            <span class="contact-icon">✉</span> mdobithsr@gmail.com
+          </a>
+          <a href="#" class="contact-item">
+            <span class="contact-icon">💼</span> @m-dobith-syadad-riyadi
+          </a>
+          <div class="contact-item">
+            <span class="contact-icon">📍</span> Ciamis, West Java, ID
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">// Tech Stack</div>
+      <h2>Keahlian <span>Profesional</span></h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group reveal">
+        <div class="skill-group-title"><span class="skill-group-icon">⚙️</span> Backend Frameworks</div>
+        <div class="badges">
+          <span class="badge badge-green">Laravel</span>
+          <span class="badge badge-green">CodeIgniter</span>
+          <span class="badge badge-green">Spring Boot</span>
+          <span class="badge badge-green">Go Fiber</span>
+          <span class="badge badge-green">FastAPI</span>
+          <span class="badge badge-green">Flask</span>
+          <span class="badge badge-green">Django</span>
+          <span class="badge badge-green">ExpressJS</span>
+          <span class="badge badge-green">NestJS</span>
+        </div>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-title"><span class="skill-group-icon">💻</span> Programming Languages</div>
+        <div class="badges">
+          <span class="badge badge-indigo">PHP</span>
+          <span class="badge badge-indigo">Python</span>
+          <span class="badge badge-indigo">Java</span>
+          <span class="badge badge-indigo">Golang</span>
+          <span class="badge badge-indigo">Node.js</span>
+          <span class="badge badge-indigo">TypeScript</span>
+          <span class="badge badge-indigo">JavaScript</span>
+        </div>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-title"><span class="skill-group-icon">🗄️</span> Databases</div>
+        <div class="badges">
+          <span class="badge badge-amber">MySQL</span>
+          <span class="badge badge-amber">PostgreSQL</span>
+          <span class="badge badge-amber">MongoDB</span>
+          <span class="badge badge-amber">SQL Server</span>
+          <span class="badge badge-amber">Redis</span>
+        </div>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-title"><span class="skill-group-icon">🛠️</span> Tools & DevOps</div>
+        <div class="badges">
+          <span class="badge badge-pink">Docker</span>
+          <span class="badge badge-pink">CI/CD</span>
+          <span class="badge badge-pink">GitHub Actions</span>
+          <span class="badge badge-pink">VPS/SSH</span>
+          <span class="badge badge-pink">Nginx</span>
+          <span class="badge badge-pink">Ubuntu</span>
+          <span class="badge badge-pink">cPanel</span>
+          <span class="badge badge-pink">FTP</span>
+        </div>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-title"><span class="skill-group-icon">🤖</span> ML & Data</div>
+        <div class="badges">
+          <span class="badge badge-green">TensorFlow</span>
+          <span class="badge badge-green">Scikit-learn</span>
+          <span class="badge badge-green">Selenium</span>
+          <span class="badge badge-green">BeautifulSoup</span>
+          <span class="badge badge-green">Puppeteer</span>
+          <span class="badge badge-green">Pandas</span>
+        </div>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-title"><span class="skill-group-icon">💳</span> Payment & Integration</div>
+        <div class="badges">
+          <span class="badge badge-indigo">Midtrans</span>
+          <span class="badge badge-indigo">Xendit</span>
+          <span class="badge badge-indigo">Tripay</span>
+          <span class="badge badge-indigo">EPROC</span>
+          <span class="badge badge-indigo">REST API</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WORK EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">// Work Experience</div>
+      <h2>Riwayat <span>Pekerjaan</span></h2>
+    </div>
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🏢</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Full Stack Developer</div>
+            <div class="timeline-period">Jan 2026 – Sekarang</div>
+          </div>
+          <div class="timeline-company">PT. Bharata Internasional Pharmaceutical</div>
+          <div class="timeline-type">Full Time</div>
+          <div class="timeline-desc">
+            <ul>
+              <li>Fullstack Developer bertanggung jawab dalam pemeliharaan dan pengembangan aplikasi keuangan menggunakan Spring Boot (backend) dan React.js (frontend).</li>
+              <li>Berkolaborasi dengan tim Finance dan stakeholders untuk memberikan solusi teknis, support, dan penyelesaian masalah aplikasi.</li>
+              <li>Menangani operasi database, optimasi query SQL, dan membuat visualisasi data menggunakan Python dan Google Colab.</li>
+            </ul>
+          </div>
+          <div class="tools-row">
+            <span class="tool-chip">Java</span><span class="tool-chip">SpringBoot</span><span class="tool-chip">Golang</span><span class="tool-chip">Go Fiber</span><span class="tool-chip">MongoDB</span><span class="tool-chip">PostgreSQL</span><span class="tool-chip">React.js</span><span class="tool-chip">VPS</span><span class="tool-chip">Github</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🏢</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Backend Developer</div>
+            <div class="timeline-period">Agu 2025 – Jan 2026</div>
+          </div>
+          <div class="timeline-company">PT. Bharata Internasional Pharmaceutical</div>
+          <div class="timeline-type">Full Time</div>
+          <div class="timeline-desc">
+            <ul>
+              <li>Backend Developer spesialis Java Spring Boot (Finance) dan Go Fiber (HRIS), fokus pada sistem yang scalable dan high-performance.</li>
+              <li>Berpengalaman dalam deployment aplikasi dan manajemen server menggunakan SSH, memastikan rilis yang andal di lingkungan produksi.</li>
+            </ul>
+          </div>
+          <div class="tools-row">
+            <span class="tool-chip">Java</span><span class="tool-chip">SpringBoot</span><span class="tool-chip">Golang</span><span class="tool-chip">Go Fiber</span><span class="tool-chip">MongoDB</span><span class="tool-chip">PostgreSQL</span><span class="tool-chip">Node JS</span><span class="tool-chip">VPS</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">💼</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Software Engineer</div>
+            <div class="timeline-period">Nov 2023 – Des 2024</div>
+          </div>
+          <div class="timeline-company">Inovasi Alfatih Maulana</div>
+          <div class="timeline-type">Full Time</div>
+          <div class="timeline-desc">
+            <ul>
+              <li>Maintained dan optimized aplikasi existing untuk meningkatkan performa dan user experience.</li>
+              <li>Developed dan maintained web applications untuk Events, Course dan Blog menggunakan Laravel.</li>
+              <li>Membuat REST API untuk proses withdrawal menggunakan Express JS dan Xendit untuk transaksi aman.</li>
+              <li>Managed deployment aplikasi menggunakan FTP dan mengimplementasikan CI/CD pipelines.</li>
+              <li>Scraping data menggunakan Python, Selenium, BeautifulSoup, dan FastAPI untuk REST API.</li>
+              <li>Scraping data menggunakan NodeJS, Cheerio, Puppeteer, dan Express JS untuk REST API.</li>
+            </ul>
+          </div>
+          <div class="tools-row">
+            <span class="tool-chip">PHP</span><span class="tool-chip">Laravel</span><span class="tool-chip">NodeJS</span><span class="tool-chip">ExpressJS</span><span class="tool-chip">Python</span><span class="tool-chip">FastAPI</span><span class="tool-chip">Selenium</span><span class="tool-chip">Xendit</span><span class="tool-chip">MySQL</span><span class="tool-chip">MongoDB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🎓</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Machine Learning Mentor</div>
+            <div class="timeline-period">Agu – Des 2024</div>
+          </div>
+          <div class="timeline-company">Bangkit Academy (Google, Tokopedia, Gojek, Traveloka)</div>
+          <div class="timeline-type">Part Time</div>
+          <div class="timeline-desc">
+            Mentoring sekelompok kelas dengan 24 mahasiswa dalam program Machine Learning.
+          </div>
+          <div class="tools-row">
+            <span class="tool-chip">Google Meet</span><span class="tool-chip">Coursera</span><span class="tool-chip">Dicoding</span><span class="tool-chip">Kahoot</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🎓</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Internship — Backend Developer</div>
+            <div class="timeline-period">Agu – Des 2022</div>
+          </div>
+          <div class="timeline-company">PT. Media Kreasi Abadi (MSIB)</div>
+          <div class="timeline-type">Internship</div>
+          <div class="timeline-desc">
+            <ul>
+              <li>Developed Attendance App dengan NodeJS dan ExpressJS, integrasi payment gateway Midtrans.</li>
+              <li>Implemented RESTful API, CI/CD, manual testing, dan MySQL dengan Sequelize.</li>
+              <li>Deploy backend di VPS Ubuntu menggunakan Nginx, kontrol versi dengan Git.</li>
+              <li>Berkolaborasi dengan Project Owner, Scrum Master, Business Analyst, UI/UX Designer, dan Mobile Developer.</li>
+            </ul>
+          </div>
+          <div class="tools-row">
+            <span class="tool-chip">NodeJS</span><span class="tool-chip">ExpressJS</span><span class="tool-chip">MySQL</span><span class="tool-chip">Midtrans</span><span class="tool-chip">VPS</span><span class="tool-chip">Nginx</span><span class="tool-chip">PM2</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FREELANCE PROJECTS -->
+<section id="freelance">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">// Projects</div>
+      <h2>Project <span>Freelance</span></h2>
+    </div>
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🚀</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Backend Developer — New Vista</div>
+            <div class="timeline-period">Jul 2024 – Jun 2025</div>
+          </div>
+          <div class="timeline-company">Soedarpo Informatika</div>
+          <div class="timeline-desc">
+            <ul>
+              <li>Developed comprehensive application menggunakan Redis, TypeScript, NestJS, SQL Server, dan PostgreSQL.</li>
+              <li>Integrasi dengan sistem EPROC.</li>
+              <li>Berkolaborasi aktif dengan cross-functional team untuk delivery project yang sukses.</li>
+            </ul>
+          </div>
+          <div class="tools-row">
+            <span class="tool-chip">NodeJS</span><span class="tool-chip">TypeScript</span><span class="tool-chip">NestJS</span><span class="tool-chip">PostgreSQL</span><span class="tool-chip">SQL Server</span><span class="tool-chip">Redis</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🚀</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Backend Engineer — Bermentor</div>
+            <div class="timeline-period">Jan 2025 – Jul 2025</div>
+          </div>
+          <div class="timeline-company">Bermentor</div>
+          <div class="timeline-desc">
+            Delivered robust Laravel-MySQL solution dengan peningkatan performa sistem dan operasi data yang lebih efisien; di-deploy di lingkungan cPanel dan VPS.
+          </div>
+          <div class="tools-row">
+            <span class="tool-chip">Laravel</span><span class="tool-chip">MySQL</span><span class="tool-chip">CPanel</span><span class="tool-chip">VPS</span><span class="tool-chip">Ubuntu</span><span class="tool-chip">Nginx</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🚀</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Backend Engineer — Cashier, Inventory, HRIS</div>
+            <div class="timeline-period">Jul 2023 – Sekarang</div>
+          </div>
+          <div class="timeline-company">Relasi Symbio Solusi</div>
+          <div class="timeline-desc">
+            Built dan optimized Laravel-MySQL based application untuk streamline manajemen data dan meningkatkan performa sistem; di-deploy di cPanel dan VPS.
+          </div>
+          <div class="tools-row">
+            <span class="tool-chip">Laravel</span><span class="tool-chip">MySQL</span><span class="tool-chip">CPanel</span><span class="tool-chip">VPS</span><span class="tool-chip">Tripay</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🚀</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Backend Developer — Crew Management</div>
+            <div class="timeline-period">Des 2023 – Apr 2024</div>
+          </div>
+          <div class="timeline-company">Samudera Daya Maritim</div>
+          <div class="timeline-desc">
+            <ul>
+              <li>Developed robust APIs menggunakan Laravel untuk meningkatkan backend functionality.</li>
+              <li>Berkolaborasi dengan CTO dan tiga frontend developer.</li>
+              <li>Implemented CI/CD pipelines dan containerization menggunakan Docker.</li>
+            </ul>
+          </div>
+          <div class="tools-row">
+            <span class="tool-chip">PHP</span><span class="tool-chip">Laravel</span><span class="tool-chip">PostgreSQL</span><span class="tool-chip">Docker</span><span class="tool-chip">GithubAction</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🚀</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Backend Developer — Ngabsign App</div>
+            <div class="timeline-period">Jan 2023 – Jan 2024</div>
+          </div>
+          <div class="timeline-company">Ngabsign</div>
+          <div class="timeline-desc">
+            <ul>
+              <li>Developed Attendance App dengan NodeJS dan ExpressJS backend, integrasi Midtrans payment gateway.</li>
+              <li>Led remote full stack team sebagai Tech Lead selama 13 bulan.</li>
+            </ul>
+          </div>
+          <div class="tools-row">
+            <span class="tool-chip">NodeJS</span><span class="tool-chip">ExpressJS</span><span class="tool-chip">MySQL</span><span class="tool-chip">Midtrans</span><span class="tool-chip">VPS</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🌐</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Founder — MathKonsep</div>
+            <div class="timeline-period">Des 2022 – Sekarang</div>
+          </div>
+          <div class="timeline-company">MathKonsep (Self-founded)</div>
+          <div class="timeline-desc">
+            Building platform persiapan UTBK (Vue.js & Laravel; migrasi ke Go Fiber) dan membuat konten edukasi di Instagram dan TikTok.
+          </div>
+          <div class="tools-row">
+            <span class="tool-chip">VueJS</span><span class="tool-chip">Laravel</span><span class="tool-chip">Go Fiber</span><span class="tool-chip">MySQL</span><span class="tool-chip">PostgreSQL</span><span class="tool-chip">Docker</span><span class="tool-chip">Nginx</span><span class="tool-chip">Tripay</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">// Education</div>
+      <h2>Riwayat <span>Pendidikan</span></h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot">📚</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Informatics Engineer</div>
+            <div class="timeline-period">Sep 2023 – Jun 2024</div>
+          </div>
+          <div class="timeline-company">STIMIK Dharma Negara Bandung</div>
+          <div class="timeline-desc">
+            Acquired knowledge in Database Design, Data Warehouse Architecture, dan Data Mining. Studied Mathematical Logic and Calculus.
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">📚</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Machine Learning Cohort</div>
+            <div class="timeline-period">Feb – Jul 2023</div>
+          </div>
+          <div class="timeline-company">Bangkit Academy (Google, Tokopedia, Gojek, Traveloka)</div>
+          <div class="timeline-desc">
+            <ul>
+              <li>Mempelajari IT Automation dengan Python, Data Analytics, Math for ML, ML Specialization, TensorFlow Data Deployment.</li>
+              <li>Capstone: Built Travel App dengan Itinerary Recommendation dan Weather Prediction menggunakan Nearest Neighbor dan LSTM Bidirectional. Deployment menggunakan Flask.</li>
+              <li>Kolaborasi dengan 2 Cloud Computing, 1 Machine Learning, dan 1 Mobile Developer.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">📚</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="timeline-title">Informatics Managements</div>
+            <div class="timeline-period">Jul 2020 – Jul 2023</div>
+          </div>
+          <div class="timeline-company">Polytechnic LP3I</div>
+          <div class="timeline-desc">
+            Learn Algorithm & Data Structure, Object Oriented Programming, System Design Analysis, Mobile Programming Framework, Web Framework Development, Application Development Project dan Software Testing.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">// Licences & Certifications</div>
+      <h2>Sertifikasi <span>& Lisensi</span></h2>
+    </div>
+    <div class="certs-grid">
+      <div class="cert-card reveal">
+        <div class="cert-icon">🐹</div>
+        <div><div class="cert-name">Scalable Web Service with Golang</div><div class="cert-issuer">Hacktiv8 Indonesia</div></div>
+        <div class="cert-year">2024</div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-icon">🧠</div>
+        <div><div class="cert-name">Machine Learning Specialization</div><div class="cert-issuer">DeepLearning.AI</div></div>
+        <div class="cert-year">2023</div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-icon">🤖</div>
+        <div><div class="cert-name">TensorFlow Developer</div><div class="cert-issuer">DeepLearning.AI</div></div>
+        <div class="cert-year">2023</div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-icon">📦</div>
+        <div><div class="cert-name">TensorFlow: Data and Deployment</div><div class="cert-issuer">DeepLearning.AI</div></div>
+        <div class="cert-year">2023</div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-icon">📊</div>
+        <div><div class="cert-name">Data Analytics</div><div class="cert-issuer">Google</div></div>
+        <div class="cert-year">2023</div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-icon">🐍</div>
+        <div><div class="cert-name">IT Automation with Python</div><div class="cert-issuer">Google</div></div>
+        <div class="cert-year">2023</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">// Achievements</div>
+      <h2>Prestasi <span>& Penghargaan</span></h2>
+    </div>
+    <div class="achievement-card reveal">
+      <div class="achievement-icon">🏆</div>
+      <div>
+        <div class="achievement-title">Top 15 Teams — INNO CAMP 2021</div>
+        <div class="achievement-org">Adira Finance Corporate University · July 2022</div>
+        <div class="achievement-desc">
+          15 Tim Terbaik dari 200+ Tim Mahasiswa se-Indonesia. Mentoring dalam Design Thinking (Empathise, Define, Ideate, Prototype, Test) untuk inovasi bisnis Adira. Membuat Business Model Innovation untuk Adira Finance dan mempresentasikan hasilnya.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p>
+      Designed & Coded with ❤ · <strong style="color:var(--text)">M Dobith Syadad Riyadi</strong> ·
+      <a href="mailto:mdobithsr@gmail.com">mdobithsr@gmail.com</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal, .timeline-item, .cert-card').forEach(el => {
+  observer.observe(el);
+});
+
+// Staggered timeline animation
+const timelineItems = document.querySelectorAll('.timeline-item');
+timelineItems.forEach((item, i) => {
+  item.style.transitionDelay = (i % 3) * 0.1 + 's';
+});
+
+// Glow orb following mouse
+document.addEventListener('mousemove', (e) => {
+  const glow = document.querySelector('.glow-3');
+  glow.style.left = e.clientX + 'px';
+  glow.style.top = e.clientY + 'px';
+  glow.style.transform = 'translate(-50%, -50%)';
+});
+</script>
+</body>
+</html>
